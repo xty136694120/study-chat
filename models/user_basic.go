@@ -2,10 +2,9 @@ package models
 
 import (
 	"ginchat/utils"
+	"gorm.io/gorm"
 	"strconv"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type UserBasic struct {

@@ -101,9 +101,6 @@ func CreateUser(c *gin.Context) {
 	user.Name = c.PostForm("name")
 	password := c.PostForm("password")
 	rePassword := c.PostForm("rePassword")
-	fmt.Println(user.Name)
-	fmt.Println(password)
-	fmt.Println(rePassword)
 	if user.Name == "" {
 		c.JSON(-1, gin.H{
 			"code":    -1,
@@ -252,4 +249,22 @@ func MsgHandler(ws *websocket.Conn, c *gin.Context) {
 
 func SendUserMsg(c *gin.Context) {
 	models.Chat(c.Writer, c.Request)
+}
+
+func SearchFriends(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.Request.FormValue("userId"))
+	users := models.SearchFriend(uint(userId))
+	userResponses := make([]models.ResponseData, 0)
+	for _, v := range users {
+		userResponses = append(userResponses, models.ResponseData{
+			ID:       v.ID,
+			Name:     v.Name,
+			Identity: v.Identity,
+		})
+	}
+	c.JSON(200, gin.H{
+		"code":    0,
+		"message": "查询用户好友成功",
+		"data":    userResponses,
+	})
 }
